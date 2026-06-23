@@ -42,8 +42,9 @@ class _HomeScreenState extends State<HomeScreen> {
 
   void _launchTool() {
     Navigator.of(context).push(PageRouteBuilder(
+      opaque: false,
       pageBuilder: (_, __, ___) => const DashboardScreen(showBackButton: true),
-      transitionDuration: const Duration(milliseconds: 500),
+      transitionDuration: const Duration(milliseconds: 400),
       transitionsBuilder: (_, anim, __, child) =>
           FadeTransition(opacity: anim, child: child),
     ));
