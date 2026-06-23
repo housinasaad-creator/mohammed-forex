@@ -74,10 +74,17 @@ def _macd(closes, fast=12, slow=26, sig=9):
     return mv, sv, mv - sv
 
 def fetch(yf_sym, interval, period):
-    df = yf.Ticker(yf_sym).history(period=period, interval=interval)
-    if df.empty:
-        return None
-    return df
+    for attempt in range(3):
+        try:
+            df = yf.Ticker(yf_sym).history(period=period, interval=interval)
+            if not df.empty:
+                return df
+            if attempt < 2:
+                time.sleep(3)
+        except Exception:
+            if attempt < 2:
+                time.sleep(5)
+    return None
 
 @app.route('/health', methods=['GET'])
 def health():
