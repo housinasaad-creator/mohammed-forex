@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:http/http.dart' as http;
 import '../models/asset_model.dart';
 import '../models/analysis_result.dart';
 import '../../../services/analysis_service.dart';
@@ -15,6 +16,18 @@ class DashboardProvider extends ChangeNotifier {
   AnalysisResult? _result;
   String _errorMessage = '';
   bool _mt5Connected = true; // simulated
+
+  DashboardProvider() {
+    _pingBridge();
+  }
+
+  // Fire-and-forget ping to wake Render.com free-tier bridge before user clicks Analyze
+  Future<void> _pingBridge() async {
+    try {
+      await http.get(Uri.parse('https://forex-bridge.onrender.com/health'))
+          .timeout(const Duration(seconds: 30));
+    } catch (_) {}
+  }
 
   // ── Getters ────────────────────────────────────────────────────────────────
 
